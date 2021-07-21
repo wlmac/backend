@@ -40,11 +40,13 @@ module.exports.execute = function (req, res) {
                                 delete obj.password;
                                 let accessToken = jwt.sign(obj, config.TOKEN_SECRET, { expiresIn: "20m" });
                                 let refreshToken = jwt.sign({ userid: obj.userid, sessionid: sessionid }, config.REFRESH_TOKEN_SECRET);
-                                sql.dbRun(`INSERT INTO refresh (issueat, sessionid, userid) VALUES(?, ?, ?)`, [Date.now(), sessionid, obj.userid], 'run').then(() => {
-                                    res.json({
-                                        accessToken,
-                                        refreshToken
-                                    });
+                                sql.dbRun(`DELETE FROM refresh WHERE userid = ?`, [obj.userid], 'run').then(() => {
+                                    sql.dbRun(`INSERT INTO refresh (issueat, sessionid, userid) VALUES(?, ?, ?)`, [Date.now(), sessionid, obj.userid], 'run').then(() => {
+                                        res.json({
+                                            accessToken,
+                                            refreshToken
+                                        });
+                                    }).catch(err => res.status(500).json({ status: 500, error: "Internal server error" }));
                                 }).catch(err => res.status(500).json({ status: 500, error: "Internal server error" }));
                             }
                             else {
