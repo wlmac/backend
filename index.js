@@ -35,7 +35,7 @@ app.use('/', function (req, res) {
         }
     }
     else {
-        res.status(403).json({ status: 403, error: 'Endpoint access denied' });
+        res.status(403).json({ status: 403, error: 'Endpoint access denied. Do you have a valid authentication header?' });
     }
 })
 
