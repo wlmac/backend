@@ -1,9 +1,12 @@
 const fs = require('fs');
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ strict: true }));
+app.use(cors());
+app.options('*', cors()); //change to domain in production
 app.enable('trust proxy');
 
 var endpoints = {}
