@@ -18,3 +18,10 @@ sessionid TEXT NOT NULL,
 userid TEXT NOT NULL UNIQUE,
 FOREIGN KEY (userid) REFERENCES users (userid)
 );
+
+CREATE TABLE verify(
+code TEXT PRIMARY KEY,
+issueat INTEGER NOT NULL,
+userid TEXT NOT NULL UNIQUE,
+FOREIGN KEY (userid) REFERENCES users (userid)
+)
