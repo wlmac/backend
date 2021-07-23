@@ -2,7 +2,7 @@ module.exports = {
     mail: {
         username: '',
         password: '',
-        name: "",
-        originEmail: ""
+        name: "Verification",
+        originEmail: "verification@maclyonsden.com"
     }
 }
