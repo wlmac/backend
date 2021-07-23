@@ -12,13 +12,13 @@ module.exports.verify = function (req, res) {
 
 module.exports.execute = function (req, res) {
     for (const prop in req.body) {
-        req.body[prop] = String(req.body[prop]).trim();
+        req.body[prop] = String(req.body[prop]);
     }
     if (!req.body.password && !req.body.email) {
         return res.status(400).json({ status: 400, error: 'Missing required fields' });
     }
     let password = req.body.password;
-    let email = req.body.email.toLowerCase();
+    let email = req.body.email.trim().toLowerCase();
     if (email == "" || password == "") {
         return res.status(400).json({ status: 400, error: 'Empty email or password' });
     }
