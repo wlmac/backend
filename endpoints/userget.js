@@ -8,15 +8,20 @@ const config = require('../config.json');
 module.exports.name = "user/get";
 module.exports.verify = function (req, res) {
     let authHeader = req.headers.authorization;
-    let token = authHeader.split(' ')[1];
-    jwt.verify(token, config.TOKEN_SECRET, (err, user) => {
-        if (err || user.generalaccesslevel <= 0) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    })
+    if (authHeader) {
+        let token = authHeader.split(' ')[1];
+        jwt.verify(token, config.TOKEN_SECRET, (err, user) => {
+            if (err || user.generalaccesslevel <= 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        })
+    }
+    else {
+        return false;
+    }
 }
 
 module.exports.execute = function (req, res) {
