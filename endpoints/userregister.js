@@ -18,8 +18,8 @@ module.exports.execute = function (req, res) {
         res.status(400).json({ status: 400, error: "Missing required fields" });
     }
 
-    let password = req.body.password.trim();
-    let email = req.body.email.trim();
+    let password = req.body.password;
+    let email = req.body.email.trim().toLowerCase();
     let firstname = req.body.firstname.trim();
     let lastname = req.body.lastname.trim();
     if (!helper.validateEmail(email)) {
