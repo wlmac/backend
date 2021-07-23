@@ -19,8 +19,8 @@ module.exports.execute = function (req, res) {
     }
     let password = req.body.password;
     let email = req.body.email.toLowerCase();
-    if (email == "") {
-        return res.status(400).json({ status: 400, error: 'Empty fields' });
+    if (email == "" || password == "") {
+        return res.status(400).json({ status: 400, error: 'Empty email or password' });
     }
     if (!helper.validateEmail(email)) {
         return res.status(400).json({ status: 400, error: 'Invalid email' });
