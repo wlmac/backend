@@ -22,6 +22,7 @@ module.exports.execute = function (req, res) {
     let email = req.body.email.trim().toLowerCase();
     let firstname = req.body.firstname.trim();
     let lastname = req.body.lastname.trim();
+    let gradyear = parseInt(req.body.gradyear);
     if (!helper.validateEmail(email)) {
         return res.status(400).json({ status: 400, error: 'Invalid email' });
     }
@@ -30,6 +31,9 @@ module.exports.execute = function (req, res) {
     }
     if (firstname == "" || lastname == "") {
         return res.status(400).json({ status: 400, error: 'Empty firstname or lastname' });
+    }
+    if (isNaN(gradyear) || gradyear <= 2020) {
+        return res.status(400).json({ status: 400, error: 'Invalid graduation year' });
     }
     sql.dbRun(`SELECT * FROM users WHERE email = ?`, [email], 'get').then(row => {
         if (row) {
@@ -40,7 +44,7 @@ module.exports.execute = function (req, res) {
             if (err) {
                 return res.status(500).json({ status: 500, error: "Internal server error" });
             }
-            sql.dbRun(`INSERT INTO users(userid, firstname, lastname, email, password) VALUES(?, ?, ?, ?, ?)`, [id, firstname, lastname, email, hash], 'run').then(() => {
+            sql.dbRun(`INSERT INTO users(userid, firstname, lastname, email, password, gradyear) VALUES(?, ?, ?, ?, ?, ?)`, [id, firstname, lastname, email, hash, gradyear], 'run').then(() => {
                 let verify = nanoid.nanoid(36);
                 sql.dbRun(`INSERT INTO verify (code, issueat, userid) VALUES(?, ?, ?)`, [verify, Date.now(), id], 'run').then(() => {
                     const request = mailjet.post("send", { 'version': 'v3.1' })
