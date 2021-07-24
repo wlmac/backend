@@ -22,7 +22,7 @@ module.exports.execute = function (req, res) {
         sql.dbRun(`DELETE FROM verify WHERE code = ?`, [req.body.code], 'run').then(() => {
             if (Date.now() - row.issueat < 1000 * 60 * 60 * 24) { //1 day
                 sql.dbRun(`UPDATE users SET generalaccesslevel = 1 WHERE userid = ?`, [row.userid], 'run').then(() => {
-                    res.status(200).json({ message: "You are verified!" });
+                    res.status(200).json({ status: 200, message: "You are verified!" });
                 }).catch(err => res.status(500).json({ status: 500, error: "Internal server error" }));
             }
             else {
