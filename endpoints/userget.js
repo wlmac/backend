@@ -8,7 +8,7 @@ const config = require('../config.json');
 module.exports.name = "user/get";
 module.exports.verify = function (req, res) {
     let authHeader = req.headers.authorization;
-    if (!authHeader) {
+    if (!authHeader && authHeader.split(' ').length >= 2) {
         return false;
     }
 
