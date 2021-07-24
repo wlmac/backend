@@ -23,7 +23,7 @@ module.exports.execute = function (req, res) {
         else if (row.generalaccesslevel == 0) {
             sql.dbRun(`DELETE FROM verify WHERE userid = ?`, [row.userid], 'run').then(() => {
                 let verify = nanoid.nanoid(36);
-                sql.dbRun(`INSERT INTO verify (code, issueat, userid) VALUES(?, ?, ?)`, [verify, Date.now(), id], 'run').then(() => {
+                sql.dbRun(`INSERT INTO verify (code, issueat, userid) VALUES(?, ?, ?)`, [verify, Date.now(), row.userid], 'run').then(() => {
                     const request = mailjet.post("send", { 'version': 'v3.1' })
                         .request({
                             "Messages": [{
