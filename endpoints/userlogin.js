@@ -40,8 +40,8 @@ module.exports.execute = function (req, res) {
                 return res.status(401).json({ status: 401, error: 'Email or password is incorrect' });
             }
             // Either user unverified or account suspended
-            if (row.generalAccessLevel <= 0) {
-                return res.status(403).json({ status: 403, error: `Login denied. ${row.generalAccessLevel == 0 ? "Verification needed" : "Account suspended"}` });
+            if (row.generalaccesslevel <= 0) {
+                return res.status(403).json({ status: 403, error: `Login denied. ${row.generalaccesslevel == 0 ? "Verification needed" : "Account suspended"}` });
             }
             let sessionid = nanoid.nanoid();
             let obj = row;
