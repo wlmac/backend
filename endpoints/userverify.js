@@ -16,7 +16,7 @@ module.exports.execute = function (req, res) {
         return res.status(400).json({ status: 400, error: "Missing code field in request body" });
     }
     sql.dbRun(`SELECT * FROM verify WHERE code = ?`, [req.body.code], 'get').then(row => {
-        if (!row.issueat) {
+        if (!row) {
             return res.status(401).json({ status: 401, error: "Invalid verification code" });
         }
         sql.dbRun(`DELETE FROM verify WHERE code = ?`, [req.body.code], 'run').then(() => {
