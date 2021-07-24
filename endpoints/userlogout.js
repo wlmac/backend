@@ -8,11 +8,11 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res) {
-    let refeshAuth = req.body.token;
+    let refreshAuth = req.body.token;
     if (!refreshAuth) {
         return res.status(401).json({ status: 401, error: "Missing token field in body" });
     }
-    jwt.verify(refeshAuth, config.REFRESH_TOKEN_SECRET, (err, user) => {
+    jwt.verify(refreshAuth, config.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) {
             return res.status(401).json({ status: 401, error: "Invalid or expired refresh token" });
         }
