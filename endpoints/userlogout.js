@@ -16,9 +16,12 @@ module.exports.execute = function (req, res) {
         if (err) {
             return res.status(401).json({ status: 401, error: "Invalid or expired refresh token" });
         }
-        sql.dbRun(`SELECT * FROM refresh WHERE userid = ?`, [user.userid], 'get').then(res => {
-            if (res.sessionid === user.sessionid) {
-                sql.dbRun(`DELETE FROM refresh WHERE userid = ?`, [user.userid], 'run').then(() => {
+        sql.dbRun(`SELECT * FROM refresh WHERE userid = ?`, [user.userid], 'get').then(ref => {
+            if (!ref) {
+                return res.status(401).json({ status: 401, error: "Invalid or expired refresh token" });
+            }
+            else if (ref.sessionid === user.accesstokendata.sessionid) {
+                sql.dbRun(`DELETE FROM refresh WHERE userid = ?`, [ref.userid], 'run').then(() => {
                     res.status(200).json({ message: 'Logout success' });
                 }).catch(err => res.status(500).json({ status: 500, error: "Internal server error" }));
             } else {
