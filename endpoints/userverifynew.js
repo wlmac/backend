@@ -28,9 +28,9 @@ module.exports.execute = function (req, res) {
                         .request({
                             "Messages": [{
                                 "From": { "Email": tokens.mail.originEmail, "Name": tokens.mail.name },
-                                "To": [{ "Email": `${email}`, "Name": `${firstname} ${lastname}` }],
+                                "To": [{ "Email": `${row.email}`, "Name": `${row.firstname} ${row.lastname}` }],
                                 "Subject": "Verification Email",
-                                "HTMLPart": `<h3>Hello ${firstname} ${lastname} and welcome to maclyonsden!</h3>Here is your verification code <b>${verify}</b> <br>:)<br><br>- SAC Website Devs<br><br>P.S. If you didn't sign up at the WLMAC SAC website, someone else may be using your email!`
+                                "HTMLPart": `<h3>Hello ${row.firstname} ${row.lastname} and welcome to maclyonsden!</h3>Here is your verification code <b>${verify}</b> <br>:)<br><br>- SAC Website Devs<br><br>P.S. If you didn't sign up at the WLMAC SAC website, someone else may be using your email!`
                             }
                             ]
                         })
