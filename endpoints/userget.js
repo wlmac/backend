@@ -13,9 +13,13 @@ module.exports.verify = function (req, res) {
     }
 
     let token = authHeader.split(' ')[1];
-    jwt.verify(token, config.TOKEN_SECRET, (err, user) => {
-        return !err && user.generalaccesslevel > 0;
-    })
+    try {
+        let user = jwt.verify(token, config.TOKEN_SECRET);
+        return user && user.generalaccesslevel > 0;
+    }
+    catch {
+        return false;
+    }
 }
 
 module.exports.execute = function (req, res) {
