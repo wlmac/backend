@@ -4,7 +4,7 @@ const term = require('../data/term');
 
 function newDate(dateString) {
     // Hacky but what can I do?
-    let result = new Date(`${dateString} UTC-4`);
+    let result = new Date(`${dateString}T00:00:00`);
 
     return result;
 }
@@ -84,7 +84,7 @@ module.exports.execute = function (req, res) {
     if (!("date" in req.body)) {
         return res.status(400).json({status: 400, error: "Missing required field"});
     }
-    
+
     try {
         let result = {day: null, status: null, description: null};
         let date = newDate(req.body.date);
