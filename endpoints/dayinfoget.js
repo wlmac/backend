@@ -37,14 +37,19 @@ function getDayStatus(date) {
             result.reason = dayEvent.name;
         } else if (dayEvent.isEarlyDismissal) {
             result.isEarlyDismissal = true;
-            if (!result.isHoliday || result.reason == null) result.reason = dayEvent.name;
+            if (!result.isHoliday || result.reason == null) {
+                result.reason = dayEvent.name;
+            }
         } else if (result.reason == null) {
             result.reason = dayEvent.name;
         }
     }
 
     if (date.getDay() % 6 == 0) {
-        if (!result.isHoliday || result.reason == null) result.reason = "Weekend";
+        if (!result.isHoliday || result.reason == null) {
+            result.reason = "Weekend";
+        }
+
         result.isHoliday = true;
     }
 
@@ -60,7 +65,10 @@ function getDayNumber(date) {
     if (getDayStatus(date).isHoliday) return null;
 
     while (currentDay < date) {
-        if (!getDayStatus(currentDay).isHoliday) dayNum += 1;
+        if (!getDayStatus(currentDay).isHoliday) {
+            dayNum += 1;
+        }
+
         currentDay.setDate(currentDay.getDate() + 1);
     }
 
@@ -74,10 +82,7 @@ module.exports.verify = function (req, res) {
 
 module.exports.execute = function (req, res) {
     if (!("date" in req.body)) {
-        res.status(400);
-        res.send({status: 400, error: "Missing required field"});
-
-        return;
+        return res.status(400).json({status: 400, error: "Missing required field"});
     }
     
     try {
@@ -97,11 +102,9 @@ module.exports.execute = function (req, res) {
             result.description = `Day ${result.day}`;
         }
 
-        res.status(200);
-        res.send(result);
+        return res.status(200).json(result);
     } catch (err) {
         console.log(err);
-        res.status(500);
-        res.send({status: 500, error: "Internal server error"});
+        return res.status(500).json({status: 500, error: "Internal server error"});
     }
 }
