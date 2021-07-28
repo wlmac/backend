@@ -6,6 +6,7 @@ const nanoid = require('nanoid');
 const config = require('../config.json');
 
 module.exports.name = "user/login";
+module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;
 }

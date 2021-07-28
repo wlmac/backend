@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 
 module.exports.name = "user/logout";
+module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;
 }

@@ -6,6 +6,7 @@ const nanoid = require('nanoid');
 const config = require('../config.json');
 
 module.exports.name = "user/get";
+module.exports.method = "GET";
 module.exports.verify = function (req, res) {
     let authHeader = req.headers.authorization;
     if (!authHeader && authHeader.split(' ').length >= 2) {

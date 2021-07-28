@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config.json');
 
 module.exports.name = "user/tokenrefresh";
+module.exports.method = "GET";
 module.exports.verify = function (req, res) {
     return true;
 }

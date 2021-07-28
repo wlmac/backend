@@ -6,6 +6,7 @@ const tokens = require('../data/tokens');
 const mailjet = require('node-mailjet').connect(tokens.mail.username, tokens.mail.password);
 
 module.exports.name = "user/register";
+module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;
 }

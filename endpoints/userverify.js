@@ -1,6 +1,7 @@
 const sql = require('../lib/db');
 
 module.exports.name = "user/verify";
+module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;
 }
