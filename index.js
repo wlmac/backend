@@ -12,7 +12,7 @@ app.enable('trust proxy');
 var endpoints = {}
 fs.readdirSync('./endpoints/').forEach(function (file) {
     let m = require('./endpoints/' + file);
-    if (m.name == null || m.execute == null || m.verify == null) {
+    if (m.name == null || m.execute == null || m.verify == null || m.method == null) {
         console.error(`\x1b[31mInvalid endpoint: ${file}\x1b[0m`);
     }
     else if (m.name in endpoints) {
@@ -28,6 +28,9 @@ app.use('/', function (req, res) {
     const endpoint = req.url.split('?')[0].slice(1);
     if (!endpoints[endpoint]) {
         res.status(404).json({ status: 404, error: 'Could not find endpoint' });
+    }
+    else if (endpoints[endpoint].method !== req.method) {
+        res.status(400).json({ status: 400, error: `Invalid method for endpoint. Must use ${endpoints[endpoint].method}` });
     }
     else if (endpoints[endpoint].verify(req, res)) {
         try {
