@@ -7,22 +7,22 @@ function newLocalDate(dateString) {
     return new Date(`${dateString}T00:00:00`);
 }
 
-function isEventWithinDateRange(rangeStart, rangeEnd, eventDate) {
+function isDateWithinDateRange(rangeStart, rangeEnd, date) {
     let startDate = newLocalDate(rangeStart);
     let endDate = newLocalDate(rangeEnd);
 
-    return startDate <= eventDate && eventDate < endDate;
+    return startDate <= date && date < endDate;
 }
 
 function getEvents(date) {
-    return term.events.filter(dayEvent => isEventWithinDateRange(dayEvent.startDate, dayEvent.endDate, date));
+    return term.events.filter(dayEvent => isDateWithinDateRange(dayEvent.startDate, dayEvent.endDate, date));
 }
 
 function getDayStatus(date) {
     const dayEvents = getEvents(date);
     let result = {isHoliday: false, isEarlyDismissal: false, reason: null};
 
-    if (!isEventWithinDateRange(term.startDate, term.endDate, date)) {
+    if (!isDateWithinDateRange(term.startDate, term.endDate, date)) {
         result.isHoliday = true;
         result.reason = "No ongoing term";
 
@@ -55,12 +55,16 @@ function getDayStatus(date) {
 }
 
 function getDayNumber(date) {
-    if (!isEventWithinDateRange(term.startDate, term.endDate, date)) return null;
+    if (!isDateWithinDateRange(term.startDate, term.endDate, date)) {
+        return null;
+    }
 
     let dayNum = 0;
     let currentDay = newLocalDate(term.startDate);
 
-    if (getDayStatus(date).isHoliday) return null;
+    if (getDayStatus(date).isHoliday) {
+        return null;
+    }
 
     while (currentDay < date) {
         if (!getDayStatus(currentDay).isHoliday) {
