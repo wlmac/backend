@@ -15,7 +15,7 @@ module.exports.execute = function (req, res) {
     for (const prop in req.body) {
         req.body[prop] = String(req.body[prop]);
     }
-    if (!req.body.password || !req.body.firstname || !req.body.lastname || !req.body.email) {
+    if (!req.body.password || !req.body.firstname || !req.body.lastname || !req.body.email || !req.body.gradyear) {
         res.status(400).json({ status: 400, error: "Missing required fields" });
     }
 
@@ -29,9 +29,6 @@ module.exports.execute = function (req, res) {
     }
     if (!helper.validatePassword(password)) {
         return res.status(400).json({ status: 400, error: 'Password must be minimum eight characters, at least one uppercase letter, one lowercase letter, and one number' }).end();
-    }
-    if (firstname == "" || lastname == "") {
-        return res.status(400).json({ status: 400, error: 'Empty firstname or lastname' });
     }
     if (isNaN(gradyear) || gradyear <= 2020) {
         return res.status(400).json({ status: 400, error: 'Invalid graduation year' });
