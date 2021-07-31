@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const helper = require('../lib/helper');
 const config = require('../config.json');
 const term = require('../data/term');
@@ -20,7 +21,7 @@ function getEvents(date) {
 
 function getDayStatus(date) {
     const dayEvents = getEvents(date);
-    let result = {isHoliday: false, isEarlyDismissal: false, reason: null};
+    let result = { isHoliday: false, isEarlyDismissal: false, reason: null };
 
     if (!isDateWithinDateRange(term.startDate, term.endDate, date)) {
         result.isHoliday = true;
@@ -78,20 +79,33 @@ function getDayNumber(date) {
 }
 
 module.exports.name = "dayinfo/get";
+module.exports.method = "GET";
 module.exports.verify = function (req, res) {
-    return true;
+    let authHeader = req.headers.authorization;
+    if (!authHeader && authHeader.split(' ').length >= 2) {
+        return false;
+    }
+
+    let token = authHeader.split(' ')[1];
+    try {
+        let user = jwt.verify(token, config.TOKEN_SECRET);
+        return user && user.generalaccesslevel > 0;
+    }
+    catch {
+        return false;
+    }
 }
 
 module.exports.execute = function (req, res) {
     if (!req.body.date) {
-        return res.status(400).json({status: 400, error: "Missing required field"});
+        return res.status(400).json({ status: 400, error: "Missing required field" });
     }
 
-    let result = {day: null, status: null, description: null};
+    let result = { day: null, status: null, description: null };
     let date = newLocalDate(req.body.date);
-    
+
     if (isNaN(date)) {
-        return res.status(400).json({status: 400, error: "Invalid date format"});
+        return res.status(400).json({ status: 400, error: "Invalid date format" });
     }
 
     result.day = getDayNumber(date);
