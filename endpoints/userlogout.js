@@ -23,7 +23,7 @@ module.exports.execute = function (req, res) {
             }
             else if (ref.sessionid === user.accesstokendata.sessionid) {
                 sql.dbRun(`DELETE FROM refresh WHERE userid = ?`, [ref.userid], 'run').then(() => {
-                    res.status(200).json({ message: 'Logout success' });
+                    res.status(200).json({ status: 200, message: 'Logout success' });
                 }).catch(err => res.status(500).json({ status: 500, error: "Internal server error" }));
             } else {
                 return res.status(401).json({ status: 401, error: "Invalid or expired refresh token" });
