@@ -2,14 +2,14 @@ const helper = require('../lib/helper');
 const config = require('../config.json');
 const term = require('../data/term');
 
-function newDate(dateString) {
+function newLocalDate(dateString) {
     // Hacky but what can I do?
     return new Date(`${dateString}T00:00:00`);
 }
 
 function isEventWithinDateRange(rangeStart, rangeEnd, eventDate) {
-    let startDate = newDate(rangeStart);
-    let endDate = newDate(rangeEnd);
+    let startDate = newLocalDate(rangeStart);
+    let endDate = newLocalDate(rangeEnd);
 
     return startDate <= eventDate && eventDate < endDate;
 }
@@ -58,7 +58,7 @@ function getDayNumber(date) {
     if (!isEventWithinDateRange(term.startDate, term.endDate, date)) return null;
 
     let dayNum = 0;
-    let currentDay = newDate(term.startDate);
+    let currentDay = newLocalDate(term.startDate);
 
     if (getDayStatus(date).isHoliday) return null;
 
@@ -83,26 +83,25 @@ module.exports.execute = function (req, res) {
         return res.status(400).json({status: 400, error: "Missing required field"});
     }
 
-    try {
-        let result = {day: null, status: null, description: null};
-        let date = newDate(req.body.date);
-
-        result.day = getDayNumber(date);
-        result.status = getDayStatus(date);
-
-        if (result.day === null) {
-            result.description = `No School - ${result.status.reason}`;
-        } else if (result.status.isEarlyDismissal) {
-            result.description = `Day ${result.day} - Early Dismissal - ${result.status.reason}`;
-        } else if (result.status.reason != null) {
-            result.description = `Day ${result.day} - ${result.status.reason}`;
-        } else {
-            result.description = `Day ${result.day}`;
-        }
-
-        return res.status(200).json(result);
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({status: 500, error: "Internal server error"});
+    let result = {day: null, status: null, description: null};
+    let date = newLocalDate(req.body.date);
+    
+    if (isNaN(date)) {
+        return res.status(400).json({status: 400, error: "Invalid date format"});
     }
+
+    result.day = getDayNumber(date);
+    result.status = getDayStatus(date);
+
+    if (result.day === null) {
+        result.description = `No School - ${result.status.reason}`;
+    } else if (result.status.isEarlyDismissal) {
+        result.description = `Day ${result.day} - Early Dismissal - ${result.status.reason}`;
+    } else if (result.status.reason != null) {
+        result.description = `Day ${result.day} - ${result.status.reason}`;
+    } else {
+        result.description = `Day ${result.day}`;
+    }
+
+    return res.status(200).json(result);
 }
