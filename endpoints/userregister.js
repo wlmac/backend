@@ -30,7 +30,7 @@ module.exports.execute = function (req, res) {
     if (!helper.validatePassword(password)) {
         return res.status(400).json({ status: 400, error: 'Password must be minimum eight characters, at least one uppercase letter, one lowercase letter, and one number' }).end();
     }
-    if (isNaN(gradyear) || gradyear <= 2020) {
+    if (isNaN(gradyear) || gradyear <= new Date().getFullYear() - 1) {
         return res.status(400).json({ status: 400, error: 'Invalid graduation year' });
     }
     sql.dbRun(`SELECT * FROM users WHERE email = ?`, [email], 'get').then(row => {
