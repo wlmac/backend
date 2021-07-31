@@ -59,12 +59,12 @@ function getDayNumber(date) {
         return null;
     }
 
-    let dayNum = 0;
-    let currentDay = newLocalDate(term.startDate);
-
     if (getDayStatus(date).isHoliday) {
         return null;
     }
+
+    let dayNum = 0;
+    let currentDay = newLocalDate(term.startDate);
 
     while (currentDay < date) {
         if (!getDayStatus(currentDay).isHoliday) {
