@@ -4,9 +4,7 @@ const term = require('../data/term');
 
 function newDate(dateString) {
     // Hacky but what can I do?
-    let result = new Date(`${dateString}T00:00:00`);
-
-    return result;
+    return new Date(`${dateString}T00:00:00`);
 }
 
 function isEventWithinDateRange(rangeStart, rangeEnd, eventDate) {
@@ -81,7 +79,7 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res) {
-    if (!("date" in req.body)) {
+    if (!req.body.date) {
         return res.status(400).json({status: 400, error: "Missing required field"});
     }
 
@@ -92,7 +90,7 @@ module.exports.execute = function (req, res) {
         result.day = getDayNumber(date);
         result.status = getDayStatus(date);
 
-        if (result.day == null) {
+        if (result.day === null) {
             result.description = `No School - ${result.status.reason}`;
         } else if (result.status.isEarlyDismissal) {
             result.description = `Day ${result.day} - Early Dismissal - ${result.status.reason}`;
