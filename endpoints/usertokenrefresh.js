@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
+const sql = require('../lib/db');
 
 module.exports.name = "user/tokenrefresh";
 module.exports.method = "GET";
@@ -16,9 +17,18 @@ module.exports.execute = function (req, res) {
         if (err) {
             return res.status(401).json({ status: 401, error: "Invalid or expired refresh token" });
         }
-        const accessToken = jwt.sign(user.accesstokendata, config.TOKEN_SECRET, { expiresIn: '20m' });
-        res.json({
-            accessToken
-        });
+        else {
+            sql.dbRun(`SELECT * FROM refresh WHERE userid = ?`, [user.userid], 'get').then(ref => {
+                if (!ref || ref.sessionid !== user.accesstokendata.sessionid) {
+                    return res.status(401).json({ status: 401, error: "Invalid or expired refresh token" });
+                }
+                else {
+                    const accessToken = jwt.sign(user.accesstokendata, config.TOKEN_SECRET, { expiresIn: '20m' });
+                    res.json({
+                        accessToken
+                    });
+                }
+            }).catch(err => res.status(500).json({ status: 500, error: "Internal server error" }));
+        }
     });
 }
