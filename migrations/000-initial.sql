@@ -25,3 +25,19 @@ issueat INTEGER NOT NULL,
 userid TEXT NOT NULL UNIQUE,
 FOREIGN KEY (userid) REFERENCES users (userid)
 )
+
+CREATE TABLE clubs(
+clubid TEXT PRIMARY KEY,
+name TEXT NOT NULL UNIQUE,
+description TEXT NOT NULL,
+logo TEXT DEFAULT "noimg",
+roomnum TEXT DEFAULT "no room specified"
+)
+
+CREATE TABLE clubmembers(
+userid TEXT NOT NULL,
+clubid TEXT NOT NULL,
+clubaccesslevel INTEGER NOT NULL DEFAULT 0 CHECK(generalaccesslevel BETWEEN -1 AND 4),
+FOREIGN KEY (userid) REFERENCES users (userid),
+FOREIGN KEY (clubid) REFERENCES clubs (clubid)
+)
