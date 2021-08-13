@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,11 @@
     "nanoid": "^3.1.23",
     "node-mailjet": "^3.3.4",
     "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "tar": "^4.4.15"
+  },
+  "resolutions": {
+    "tar": "^4.4.15"
   }
 }
